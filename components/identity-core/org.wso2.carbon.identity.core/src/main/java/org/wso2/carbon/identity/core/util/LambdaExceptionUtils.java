@@ -201,7 +201,7 @@ public final class LambdaExceptionUtils {
      * @param biFunction BiFunction to apply for given arguments.
      * @return Any Object that result from the bi-function passed.
      */
-    public static <T, U, R, E extends Exception> BiFunction<T, U, R> rethrowFunction(
+    public static <T, U, R, E extends Exception> BiFunction<T, U, R> rethrowBiFunction(
             BiFunctionWithExceptions<T, U, R, E> biFunction) {
 
         return (t,u) -> {
