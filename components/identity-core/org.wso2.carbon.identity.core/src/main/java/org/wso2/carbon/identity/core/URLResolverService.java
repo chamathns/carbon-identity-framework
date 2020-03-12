@@ -30,4 +30,8 @@ public interface URLResolverService {
 
     String resolveUrlContext(String urlContext, boolean addProxyContextPath, boolean addWebContextRoot, String
             tenantDomain, Map<String, Object> properties) throws URLResolverException;
+
+    String resolveUrlContext(String urlContext, boolean addProxyContextPath, boolean addWebContextRoot,
+                                           String tenantParam, String tenantDomain, Map<String, Object> properties)
+            throws URLResolverException;
 }

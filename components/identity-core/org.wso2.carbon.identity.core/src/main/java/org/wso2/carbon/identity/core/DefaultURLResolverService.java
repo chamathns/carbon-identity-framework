@@ -75,6 +75,20 @@ public class DefaultURLResolverService implements URLResolverService {
         return serverUrl.toString();
     }
 
+    @Override
+    public String resolveUrlContext(String urlContext, boolean addProxyContextPath,
+                                                  boolean addWebContextRoot, String tenantParam, String tenantDomain,
+                                                  Map<String, Object> properties) throws URLResolverException {
+
+        String enableTenantUrlSupport = IdentityUtil.getProperty("EnableTenantUrlSupport");
+        boolean addTenantQualifierByDefault = Boolean.parseBoolean(enableTenantUrlSupport);
+        String url = resolveUrlContext(urlContext, addProxyContextPath, addWebContextRoot, tenantDomain, properties);
+        if (!addTenantQualifierByDefault) {
+            url += tenantParam;
+        }
+        return url;
+    }
+
     private int getMgtTransportPort(String mgtTransport) {
 
         AxisConfiguration axisConfiguration = IdentityCoreServiceComponent.getConfigurationContextService().
