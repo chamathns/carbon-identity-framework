@@ -111,9 +111,6 @@ public class IdentityProviderManager implements IdpManager {
             throws IdentityProviderManagementException {
 
         IdPManagementUtil.setTenantSpecifiers(tenantDomain);
-        if (StringUtils.isBlank((String) IdentityUtil.threadLocalProperties.get().get("TenantNameFromContext"))) {
-            IdentityUtil.threadLocalProperties.get().put("TenantNameFromContext", tenantDomain);
-        }
 
         String openIdUrl;
         String samlSSOUrl;
@@ -172,11 +169,9 @@ public class IdentityProviderManager implements IdpManager {
             openIdUrl = IdentityUtil.getServerURL(IdentityConstants.OpenId.OPENID, true, true);
         }
 
-        samlSSOUrl = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.SAMLSSO, true, true,
-                IdPManagementUtil.getTenantParameter());
+        samlSSOUrl = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.SAMLSSO, true, true, true);
 
-        samlLogoutUrl = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.SAMLSSO, true, true,
-                IdPManagementUtil.getTenantParameter());
+        samlLogoutUrl = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.SAMLSSO, true, true, true);
 
         if (StringUtils.isBlank(samlArtifactUrl)) {
             samlArtifactUrl = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.SAMLSSO, true, true);
@@ -187,8 +182,7 @@ public class IdentityProviderManager implements IdpManager {
         }
 
         samlAuthnRequestsSigningEnabled = IdentityUtil.getServerURL(IdentityConstants.ServerConfig.
-                SAML_METADATA_AUTHN_REQUESTS_SIGNING_ENABLED, true, true,
-                IdPManagementUtil.getTenantParameter());
+                SAML_METADATA_AUTHN_REQUESTS_SIGNING_ENABLED, true, true, true);
 
         if (StringUtils.isBlank(oauth1RequestTokenUrl)) {
             oauth1RequestTokenUrl = IdentityUtil.getServerURL(IdentityConstants.OAuth.REQUEST_TOKEN, true, true);

@@ -368,15 +368,7 @@ public class IdentityUtil {
     public static String getServerURL(String urlContext, boolean addProxyContextPath, boolean addWebContextRoot)
             throws IdentityRuntimeException {
 
-        //TODO: introduce a config
-        URLResolverService urlResolverService = IdentityCoreServiceComponent.getURLResolverService();
-        String tenantNameFromContext = (String) IdentityUtil.threadLocalProperties.get().get("TenantNameFromContext");
-        try {
-            return urlResolverService.resolveUrlContext(urlContext, addProxyContextPath, addWebContextRoot,
-                                                 tenantNameFromContext, null);
-        } catch (URLResolverException e) {
-            throw IdentityRuntimeException.error("Error while resolving URL: " + urlContext, e);
-        }
+        return getServerURL(urlContext, addProxyContextPath, addWebContextRoot, false);
     }
 
     /**
@@ -405,22 +397,19 @@ public class IdentityUtil {
      * @param urlContext URL context.
      * @param addProxyContextPath add proxy context path to the URL.
      * @param addWebContextRoot add web context path to the URL.
-     * @param tenantParam tenant domain query parameter.
+     * @param addTenantQueryParamInLegacyMode add tenant domain as a query parameter in legacy mode.
      * @return complete URL for the given URL context.
-     * @throws IdentityRuntimeException if error occurred while constructing the URL
+     * @throws IdentityRuntimeException if error occurred while constructing the URL.
      */
     public static String getServerURL(String urlContext, boolean addProxyContextPath,
-                                                     boolean addWebContextRoot, String tenantParam)
+                                                     boolean addWebContextRoot, boolean addTenantQueryParamInLegacyMode)
             throws IdentityRuntimeException {
 
         URLResolverService urlResolverService = IdentityCoreServiceComponent.getURLResolverService();
         String tenantNameFromContext = (String) IdentityUtil.threadLocalProperties.get().get("TenantNameFromContext");
         try {
-            if (StringUtils.isBlank(tenantParam)) {
-                return getServerURL(urlContext, addProxyContextPath, addWebContextRoot);
-            }
             return urlResolverService.resolveUrlContext(urlContext, addProxyContextPath, addWebContextRoot,
-                        tenantParam, tenantNameFromContext, null);
+                    addTenantQueryParamInLegacyMode, tenantNameFromContext, null);
         } catch (URLResolverException e) {
             throw IdentityRuntimeException.error("Error while resolving URL: " + urlContext, e);
         }
