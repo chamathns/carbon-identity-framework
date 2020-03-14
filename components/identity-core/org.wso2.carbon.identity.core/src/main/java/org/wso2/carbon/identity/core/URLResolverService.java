@@ -16,17 +16,39 @@
 
 package org.wso2.carbon.identity.core;
 
-
 import java.util.Map;
 
 /**
- * TOD: Comment
+ * This interface is defined to resolve a provided URL or a URL context by adding a proxy context paths, web context
+ * root, and the tenant domain as specified. The URL would be resolved for the tenant domain by either adding the tenant
+ * context to the path or adding a tenant parameter (legacy mode).
  */
 public interface URLResolverService {
 
+    /**
+     * This method is used to construct a complete URL out of the given URL context.
+     * @param url URL.
+     * @param addProxyContextPath add proxy context path to the URL.
+     * @param addWebContextRoot add web context path to the URL.
+     * @param tenantDomain tenant domain.
+     * @param properties properties.
+     * @return complete URL for the given URL context.
+     * @throws URLResolverException if error occurred while constructing the URL.
+     */
     String resolveUrl(String url, boolean addProxyContextPath, boolean addWebContextRoot, String tenantDomain,
                       Map<String, Object> properties) throws URLResolverException;
 
+    /**
+     * This method is used to construct a complete URL out of the given URL context.
+     * @param urlContext URL context.
+     * @param addProxyContextPath add proxy context path to the URL.
+     * @param addWebContextRoot add web context path to the URL.
+     * @param addTenantParamLegacyMode add tenant parameter to the URL during legacy mode operation.
+     * @param tenantDomain tenant domain.
+     * @param properties properties.
+     * @return complete URL for the given URL context.
+     * @throws URLResolverException if error occurred while constructing the URL.
+     */
     String resolveUrlContext(String urlContext, boolean addProxyContextPath, boolean addWebContextRoot,
                              boolean addTenantParamLegacyMode, String tenantDomain, Map<String, Object> properties)
             throws URLResolverException;

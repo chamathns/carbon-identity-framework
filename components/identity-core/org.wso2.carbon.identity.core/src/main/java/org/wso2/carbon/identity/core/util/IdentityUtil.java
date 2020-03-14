@@ -372,11 +372,11 @@ public class IdentityUtil {
     }
 
     /**
-     * This util method is used to resolve a URL
+     * This util method is used to resolve a URL.
      *
-     * @param url
-     * @param addProxyContextPath
-     * @param addWebContextRoot
+     * @param url URL.
+     * @param addProxyContextPath add proxy context path to the URL.
+     * @param addWebContextRoot add web context path to the URL.
      * @return
      */
     public static String resolveURL(String url, boolean addProxyContextPath, boolean addWebContextRoot) {

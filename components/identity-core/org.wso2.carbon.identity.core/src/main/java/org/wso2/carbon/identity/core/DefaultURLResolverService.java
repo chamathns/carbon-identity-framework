@@ -32,8 +32,9 @@ import java.net.URL;
 import java.util.Map;
 
 /**
- * TODO: Comment
+ * URL Resolver service implementation.
  */
+
 public class DefaultURLResolverService implements URLResolverService {
 
     @Override
@@ -147,9 +148,8 @@ public class DefaultURLResolverService implements URLResolverService {
                     serverUrl.append("/t/").append(tenantNameFromContext);
                 }
             }
-        }
-
-        if (!addTenantQualifier && addTenantParamLegacyMode) {
+        } else if (addTenantParamLegacyMode && !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME
+                .equalsIgnoreCase(tenantDomain)) {
             serverUrl.append("?").append(MultitenantConstants.TENANT_DOMAIN).append("=").append(tenantDomain);
         }
 
