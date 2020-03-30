@@ -430,6 +430,7 @@
     "/api/identity/consent-mgt/v1.0/",
     "/api/identity/recovery/v0.9/",
     "/oauth2/",
+    "/authenticationendpoint/",
     "/scim2/",
     "/api/identity/entitlement/",
     "/api/identity/oauth2/dcr/v1.1/",
@@ -444,7 +445,8 @@
   ],
   "tenant_context.rewrite.servlets": [
     "/identity/(.*)",
-    "(.*)/identity/metadata/saml2"
+    "(.*)/identity/metadata/saml2",
+    "/commonauth(.*)"
   ],
   "tenant_context.rewrite.overwrite.dispatch": [
     "/user-portal/"
