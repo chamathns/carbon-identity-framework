@@ -58,19 +58,21 @@ public class DefaultServiceURLBuilder implements ServiceURLBuilder {
         private String protocol;
         private String hostName;
         private int port;
+        private String proxyContextPath;
         private String urlPath;
         private Map<String, String> parameters;
         private String fragment;
         private String absoluteUrl;
         private String relativeUrl;
 
-        private ServiceURLImpl(String protocol, String hostName, int port, String urlPath,
+        private ServiceURLImpl(String protocol, String hostName, int port, String proxyContextPath, String urlPath,
                                Map<String, String> parameters, String fragment)
                 throws URLBuilderException {
 
             this.protocol = protocol;
             this.hostName = hostName;
             this.port = port;
+            this.proxyContextPath = proxyContextPath;
             this.urlPath = urlPath;
             this.parameters = parameters;
             this.fragment = fragment;
@@ -203,6 +205,8 @@ public class DefaultServiceURLBuilder implements ServiceURLBuilder {
                 absoluteUrl.append(":").append(port);
             }
 
+            appendContextToUri(absoluteUrl, proxyContextPath);
+
             if (StringUtils.isNotBlank(urlPath)) {
                 if (urlPath.trim().charAt(0) != '/' && urlPath.trim().charAt(0) != '?') {
                     absoluteUrl.append("/").append(urlPath.trim());
@@ -221,6 +225,7 @@ public class DefaultServiceURLBuilder implements ServiceURLBuilder {
         private String fetchRelativeUrl() throws URLBuilderException {
 
             StringBuilder relativeUrl = new StringBuilder();
+            appendContextToUri(relativeUrl, proxyContextPath);
             appendContextToUri(relativeUrl, urlPath);
 
             String resolvedParamsString = getResolvedParamString(parameters);
@@ -259,6 +264,8 @@ public class DefaultServiceURLBuilder implements ServiceURLBuilder {
         String hostName = null;
         hostName = fetchHostName();
         int port = fetchPort();
+        String proxyContextPath = ServerConfiguration.getInstance().getFirstProperty(IdentityCoreConstants
+                .PROXY_CONTEXT_PATH);
         String resolvedUrlContext = buildUrlPath(urlPaths);
         String resolvedFragment = buildFragment(fragment, fragmentParams);
         tenantDomain = resolveTenantDomain();
@@ -276,7 +283,8 @@ public class DefaultServiceURLBuilder implements ServiceURLBuilder {
             }
         }
 
-        return new ServiceURLImpl(protocol, hostName, port, resolvedUrlStringBuilder.toString(), parameters,
+        return new ServiceURLImpl(protocol, hostName, port, proxyContextPath, resolvedUrlStringBuilder.toString(),
+                parameters,
                 resolvedFragment);
     }
 
