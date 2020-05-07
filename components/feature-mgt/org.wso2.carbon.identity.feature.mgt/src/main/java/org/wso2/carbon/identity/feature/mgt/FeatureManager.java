@@ -30,7 +30,7 @@ public interface FeatureManager {
     /**
      * Return the feature info given the feature id.
      *
-     * @param featureId unique identifier of the feature.
+     * @param featureId Unique identifier of the feature.
      * @return {@link Feature}.
      */
     Feature getFeatureById(String featureId);
@@ -38,15 +38,39 @@ public interface FeatureManager {
     /**
      * Update a feature given the feature id by replacing the existing feature object.
      *
-     * @param featureId unique identifier of the the template.
-     * @param feature   updated feature object.
+     * @param featureId Unique identifier of the the feature.
+     * @param feature   Updated feature object.
      */
     void updateFeatureById(String featureId, Feature feature);
 
     /**
      * Delete a feature given the feature id.
      *
-     * @param featureId unique identifier of the feature.
+     * @param featureId Unique identifier of the feature.
      */
     void deleteFeatureById(String featureId);
+
+    /**
+     * Checks the status of the feature. Whether the feature is locked or unlocked.
+     *
+     * @param featureId Unique identifier of the the feature.
+     * @return The status of the feature.
+     */
+    boolean isFeatureLocked(String featureId);
+
+    /**
+     * Get the reason/s for locking a feature given the feature id.
+     *
+     * @param featureId Unique identifier of the the feature.
+     * @return The feature lock reason.
+     */
+    String[] getFeatureLockReason(String featureId);
+
+    /**
+     * Lock a feature given the feature id and the feature lock reason/s.
+     *
+     * @param featureId             Unique identifier of the feature.
+     * @param featureLockReasonCode The reason/s for locking the feature.
+     */
+    void lockFeature(String featureId, String[] featureLockReasonCode);
 }

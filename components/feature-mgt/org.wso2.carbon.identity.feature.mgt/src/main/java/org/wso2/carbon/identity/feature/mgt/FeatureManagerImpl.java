@@ -21,56 +21,97 @@ package org.wso2.carbon.identity.feature.mgt;
 import org.wso2.carbon.identity.feature.mgt.dao.FeatureManagerDAO;
 import org.wso2.carbon.identity.feature.mgt.dao.FeatureManagerDAOImpl;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 
+import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTenantDomainFromCarbonContext;
+
+/**
+ * Feature manager service implementation.
+ */
 public class FeatureManagerImpl implements FeatureManager {
 
     /**
      * Return the feature info given the feature id.
      *
-     * @param featureId unique identifier of the feature.
+     * @param featureId Unique identifier of the feature.
      * @return {@link Feature}.
      */
     @Override
     public Feature getFeatureById(String featureId) {
 
-        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        String tenantDomain = getTenantDomain();
-
-        return featureManagerDAO.getFeatureById(featureId, tenantDomain);
+        return fetchFeatureById(featureId);
     }
 
     /**
      * Update a feature given the feature id by replacing the existing feature object.
      *
-     * @param featureId unique identifier of the the template.
-     * @param feature   updated feature object.
+     * @param featureId Unique identifier of the the template.
+     * @param feature   Updated feature object.
      */
     @Override
     public void updateFeatureById(String featureId, Feature feature) {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        String tenantDomain = getTenantDomain();
-
-        featureManagerDAO.updateFeatureById(featureId, tenantDomain, feature);
+        featureManagerDAO.updateFeatureById(featureId, getTenantDomainFromCarbonContext(), feature);
     }
 
     /**
      * Delete a feature given the feature id.
      *
-     * @param featureId unique identifier of the feature.
+     * @param featureId Unique identifier of the feature.
      */
     @Override
     public void deleteFeatureById(String featureId) {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        String tenantDomain = getTenantDomain();
-
-        featureManagerDAO.deleteFeatureById(featureId, tenantDomain);
+        featureManagerDAO.deleteFeatureById(featureId, getTenantDomainFromCarbonContext());
     }
 
-    private String getTenantDomain() {
+    /**
+     * Checks the status of the feature. Whether the feature is locked or unlocked.
+     *
+     * @param featureId Unique identifier of the the feature.
+     * @return The status of the feature.
+     */
+    @Override
+    public boolean isFeatureLocked(String featureId) {
 
-        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        Feature feature = fetchFeatureById(featureId);
+        return feature.isFeatureLocked();
+    }
+
+    /**
+     * Get the reason/s for locking a feature given the feature id.
+     *
+     * @param featureId Unique identifier of the the feature.
+     * @return The feature lock reason.
+     */
+    @Override
+    public String[] getFeatureLockReason(String featureId) {
+
+        Feature feature = fetchFeatureById(featureId);
+        return feature.getFeatureLockReason();
+    }
+
+    /**
+     * Lock a feature given the feature id and the feature lock reason/s.
+     *
+     * @param featureId             Unique identifier of the feature.
+     * @param featureLockReasonCode The reason/s for locking the feature.
+     */
+    @Override
+    public void lockFeature(String featureId, String[] featureLockReasonCode) {
+
+        Feature feature = fetchFeatureById(featureId);
+        feature.setFeatureLocked(Boolean.TRUE);
+        feature.setFeatureLockReasonCode(featureLockReasonCode);
+
+        FeatureManager featureManager = new FeatureManagerImpl();
+        featureManager.updateFeatureById(featureId, feature);
+    }
+
+    private Feature fetchFeatureById(String featureId) {
+
+        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
+        return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext());
     }
 }
