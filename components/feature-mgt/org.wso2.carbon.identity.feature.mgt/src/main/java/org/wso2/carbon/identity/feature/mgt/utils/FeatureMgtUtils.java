@@ -19,9 +19,6 @@
 package org.wso2.carbon.identity.feature.mgt.utils;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.feature.mgt.FeatureManager;
-import org.wso2.carbon.identity.feature.mgt.FeatureManagerImpl;
-import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
 /**
  * This class is used to define the Utilities required in feature management feature.

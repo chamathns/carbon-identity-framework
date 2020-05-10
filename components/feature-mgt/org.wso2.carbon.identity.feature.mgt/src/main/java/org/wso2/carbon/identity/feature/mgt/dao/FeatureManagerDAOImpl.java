@@ -20,6 +20,9 @@ package org.wso2.carbon.identity.feature.mgt.dao;
 
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
+/**
+ * Feature manager DAO implementation.
+ */
 public class FeatureManagerDAOImpl implements FeatureManagerDAO {
 
     /**

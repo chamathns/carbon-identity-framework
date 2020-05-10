@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.identity.feature.mgt.model;
 
+/**
+ * A data model class to define the Feature element.
+ */
 public class Feature {
 
     private String featureId;
@@ -38,51 +41,101 @@ public class Feature {
         this.featureLockReason = featureLockReason;
     }
 
+    /**
+     * Get feature type.
+     *
+     * @return feature type.
+     */
     public String getFeatureType() {
 
         return featureType;
     }
 
+    /**
+     * Get the status of the feature.
+     *
+     * @return the status of the feature.
+     */
     public boolean isFeatureLocked() {
 
         return isFeatureLocked;
     }
 
+    /**
+     * Get the unlock time for the feature.
+     *
+     * @return the unlock time for the feature.
+     */
     public int getFeatureUnlockTime() {
 
         return featureUnlockTime;
     }
 
+    /**
+     * Get the lock reason code/s for the feature.
+     *
+     * @return the lock reason code/s for the feature.
+     */
     public String[] getFeatureLockReasonCode() {
 
         return featureLockReasonCode;
     }
 
+    /**
+     * Get the lock reason/s for the feature.
+     *
+     * @return the lock reason/s for the feature.
+     */
     public String[] getFeatureLockReason() {
 
         return featureLockReason;
     }
 
+    /**
+     * Set the feature type of the feature.
+     *
+     * @param featureType Feature type.
+     */
     public void setFeatureType(String featureType) {
 
         this.featureType = featureType;
     }
 
+    /**
+     * Set the feature status to locked/unlocked.
+     *
+     * @param featureLocked Status of the feature.
+     */
     public void setFeatureLocked(boolean featureLocked) {
 
         isFeatureLocked = featureLocked;
     }
 
+    /**
+     * Set the unlock time for the feature.
+     *
+     * @param featureUnlockTime Unlock time for the feature.
+     */
     public void setFeatureUnlockTime(int featureUnlockTime) {
 
         this.featureUnlockTime = featureUnlockTime;
     }
 
+    /**
+     * Set the lock reason code/s for the feature.
+     *
+     * @param featureLockReasonCode Lock reason code/s of the feature.
+     */
     public void setFeatureLockReasonCode(String[] featureLockReasonCode) {
 
         this.featureLockReasonCode = featureLockReasonCode;
     }
 
+    /**
+     * Set the lock reason/s for the feature.
+     *
+     * @param featureLockReason Lock reason/s for the feature.
+     */
     public void setFeatureLockReason(String[] featureLockReason) {
 
         this.featureLockReason = featureLockReason;

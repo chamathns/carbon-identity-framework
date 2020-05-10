@@ -20,6 +20,11 @@ package org.wso2.carbon.identity.feature.mgt.dao;
 
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
+/**
+ * Perform CRUD operations for {@link Feature}.
+ *
+ * @since 1.0.0
+ */
 public interface FeatureManagerDAO {
 
     /**
