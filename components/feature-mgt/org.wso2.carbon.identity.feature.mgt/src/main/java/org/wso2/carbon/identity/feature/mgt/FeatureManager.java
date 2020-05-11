@@ -78,4 +78,12 @@ public interface FeatureManager {
      * @param featureLockReasonCode The reason/s for locking the feature.
      */
     void lockFeature(String featureId, String userId, String[] featureLockReasonCode);
+
+    /**
+     * Unlock a feature given the feature id and the user id.
+     *
+     * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
+     */
+    void unlockFeatureById(String featureId, String userId);
 }

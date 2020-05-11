@@ -79,6 +79,10 @@ public class FeatureManagerImpl implements FeatureManager {
     public boolean isFeatureLocked(String featureId, String userId) {
 
         Feature feature = fetchFeatureById(featureId, userId);
+        long unlockTime = feature.getFeatureUnlockTime();
+        if (System.currentTimeMillis() > unlockTime) {
+            unlockFeature(feature);
+        }
         return feature.isFeatureLocked();
     }
 
@@ -106,17 +110,41 @@ public class FeatureManagerImpl implements FeatureManager {
     @Override
     public void lockFeature(String featureId, String userId, String[] featureLockReasonCode) {
 
+        long unlockTimePropertyValue = FeatureMgtConstants.UNLOCK_TIME_DEFAULT_VALUE;
+        long unlockTime = System.currentTimeMillis() + unlockTimePropertyValue;
         Feature feature = fetchFeatureById(featureId, userId);
         feature.setFeatureLocked(Boolean.TRUE);
         feature.setFeatureLockReasonCode(featureLockReasonCode);
-
+        feature.setFeatureUnlockTime(unlockTime);
         FeatureManager featureManager = new FeatureManagerImpl();
         featureManager.updateFeatureById(featureId, feature);
+    }
+
+    /**
+     * Unlock a feature given the feature id and the user id.
+     *
+     * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
+     */
+    @Override
+    public void unlockFeatureById(String featureId, String userId) {
+
+        Feature feature = fetchFeatureById(featureId, userId);
+        unlockFeature(feature);
     }
 
     private Feature fetchFeatureById(String featureId, String userId) {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
         return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
+    }
+
+    private void unlockFeature(Feature feature) {
+
+        feature.setFeatureLocked(Boolean.FALSE);
+        feature.setFeatureUnlockTime(0);
+        feature.setFeatureLockReason(null);
+        feature.setFeatureLockReasonCode(null);
+        updateFeatureById(feature.getFeatureId(), feature);
     }
 }

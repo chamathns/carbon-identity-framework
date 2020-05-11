@@ -27,11 +27,11 @@ public class Feature {
     private String userId;
     private String featureType;
     private boolean isFeatureLocked;
-    private int featureUnlockTime;
+    private long featureUnlockTime;
     private String[] featureLockReasonCode;
     private String[] featureLockReason;
 
-    public Feature(String featureId, String userId, String featureType, boolean isFeatureLocked, int featureUnlockTime,
+    public Feature(String featureId, String userId, String featureType, boolean isFeatureLocked, long featureUnlockTime,
                    String[] featureLockReasonCode, String[] featureLockReason) {
 
         this.featureId = featureId;
@@ -41,6 +41,16 @@ public class Feature {
         this.featureUnlockTime = featureUnlockTime;
         this.featureLockReasonCode = featureLockReasonCode;
         this.featureLockReason = featureLockReason;
+    }
+
+    /**
+     * Get feature ID.
+     *
+     * @return Feature ID.
+     */
+    public String getFeatureId() {
+
+        return featureId;
     }
 
     /**
@@ -78,7 +88,7 @@ public class Feature {
      *
      * @return The unlock time for the feature.
      */
-    public int getFeatureUnlockTime() {
+    public long getFeatureUnlockTime() {
 
         return featureUnlockTime;
     }
@@ -138,7 +148,7 @@ public class Feature {
      *
      * @param featureUnlockTime Unlock time for the feature.
      */
-    public void setFeatureUnlockTime(int featureUnlockTime) {
+    public void setFeatureUnlockTime(long featureUnlockTime) {
 
         this.featureUnlockTime = featureUnlockTime;
     }

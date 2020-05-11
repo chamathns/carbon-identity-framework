@@ -27,6 +27,18 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
 
 
     /**
+     * Add a {@link Feature}.
+     *
+     * @param tenantDomain Tenant Domain.
+     * @param userId       Unique identifier of the user.
+     * @param feature      {@link Feature} to insert.
+     */
+    @Override
+    public void addFeature(String tenantDomain, String userId, Feature feature) {
+
+    }
+
+    /**
      * Return the feature info given the feature id, tenant domain and the user id.
      *
      * @param featureId    Unique identifier of the feature.
