@@ -30,15 +30,16 @@ import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTena
 public class FeatureManagerImpl implements FeatureManager {
 
     /**
-     * Return the feature info given the feature id.
+     * Return the feature info given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
      * @return {@link Feature}.
      */
     @Override
-    public Feature getFeatureById(String featureId) {
+    public Feature getFeatureById(String featureId, String userId) {
 
-        return fetchFeatureById(featureId);
+        return fetchFeatureById(featureId, userId);
     }
 
     /**
@@ -55,27 +56,29 @@ public class FeatureManagerImpl implements FeatureManager {
     }
 
     /**
-     * Delete a feature given the feature id.
+     * Delete a feature given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
      */
     @Override
-    public void deleteFeatureById(String featureId) {
+    public void deleteFeatureById(String featureId, String userId) {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        featureManagerDAO.deleteFeatureById(featureId, getTenantDomainFromCarbonContext());
+        featureManagerDAO.deleteFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
     }
 
     /**
      * Checks the status of the feature. Whether the feature is locked or unlocked.
      *
      * @param featureId Unique identifier of the the feature.
+     * @param userId    Unique identifier of the user.
      * @return The status of the feature.
      */
     @Override
-    public boolean isFeatureLocked(String featureId) {
+    public boolean isFeatureLocked(String featureId, String userId) {
 
-        Feature feature = fetchFeatureById(featureId);
+        Feature feature = fetchFeatureById(featureId, userId);
         return feature.isFeatureLocked();
     }
 
@@ -83,12 +86,13 @@ public class FeatureManagerImpl implements FeatureManager {
      * Get the reason/s for locking a feature given the feature id.
      *
      * @param featureId Unique identifier of the the feature.
+     * @param userId    Unique identifier of the user.
      * @return The feature lock reason.
      */
     @Override
-    public String[] getFeatureLockReason(String featureId) {
+    public String[] getFeatureLockReason(String featureId, String userId) {
 
-        Feature feature = fetchFeatureById(featureId);
+        Feature feature = fetchFeatureById(featureId, userId);
         return feature.getFeatureLockReason();
     }
 
@@ -96,12 +100,13 @@ public class FeatureManagerImpl implements FeatureManager {
      * Lock a feature given the feature id and the feature lock reason/s.
      *
      * @param featureId             Unique identifier of the feature.
+     * @param userId                Unique identifier of the user.
      * @param featureLockReasonCode The reason/s for locking the feature.
      */
     @Override
-    public void lockFeature(String featureId, String[] featureLockReasonCode) {
+    public void lockFeature(String featureId, String userId, String[] featureLockReasonCode) {
 
-        Feature feature = fetchFeatureById(featureId);
+        Feature feature = fetchFeatureById(featureId, userId);
         feature.setFeatureLocked(Boolean.TRUE);
         feature.setFeatureLockReasonCode(featureLockReasonCode);
 
@@ -109,9 +114,9 @@ public class FeatureManagerImpl implements FeatureManager {
         featureManager.updateFeatureById(featureId, feature);
     }
 
-    private Feature fetchFeatureById(String featureId) {
+    private Feature fetchFeatureById(String featureId, String userId) {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext());
+        return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
     }
 }

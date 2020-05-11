@@ -25,25 +25,26 @@ import org.wso2.carbon.identity.feature.mgt.model.Feature;
  */
 public class FeatureManagerDAOImpl implements FeatureManagerDAO {
 
+
     /**
-     * Return the feature info given the feature id.
+     * Return the feature info given the feature id, tenant domain and the user id.
      *
-     * @param featureId    unique identifier of the feature.
-     * @param tenantDomain tenant Domain.
+     * @param featureId    Unique identifier of the feature.
+     * @param tenantDomain Tenant Domain.
+     * @param userId       Unique identifier of the user.
      * @return {@link Feature}.
      */
     @Override
-    public Feature getFeatureById(String featureId, String tenantDomain) {
-
+    public Feature getFeatureById(String featureId, String tenantDomain, String userId) {
         return null;
     }
 
     /**
-     * Update a feature given the feature id by replacing the existing feature object.
+     * Update a feature given the feature id and tenant domain by replacing the existing feature object.
      *
-     * @param featureId    unique identifier of the the template.
-     * @param tenantDomain tenant Domain.
-     * @param feature      updated feature object.
+     * @param featureId    Unique identifier of the the template.
+     * @param tenantDomain Tenant Domain.
+     * @param feature      Updated feature object.
      */
     @Override
     public void updateFeatureById(String featureId, String tenantDomain, Feature feature) {
@@ -51,13 +52,14 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
     }
 
     /**
-     * Delete a feature given the feature id.
+     * Delete a feature given the feature id, tenant domain and the user id.
      *
-     * @param featureId    unique identifier of the feature.
-     * @param tenantDomain tenant Domain.
+     * @param featureId    Unique identifier of the feature.
+     * @param tenantDomain Tenant Domain.
+     * @param userId       Unique identifier of the user.
      */
     @Override
-    public void deleteFeatureById(String featureId, String tenantDomain) {
+    public void deleteFeatureById(String featureId, String tenantDomain, String userId) {
 
     }
 }

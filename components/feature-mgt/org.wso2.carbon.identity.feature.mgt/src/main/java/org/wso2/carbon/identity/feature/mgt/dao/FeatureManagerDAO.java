@@ -28,28 +28,30 @@ import org.wso2.carbon.identity.feature.mgt.model.Feature;
 public interface FeatureManagerDAO {
 
     /**
-     * Return the feature info given the feature id.
+     * Return the feature info given the feature id, tenant domain and the user id.
      *
-     * @param featureId    unique identifier of the feature.
-     * @param tenantDomain tenant Domain.
+     * @param featureId    Unique identifier of the feature.
+     * @param tenantDomain Tenant Domain.
+     * @param userId       Unique identifier of the user.
      * @return {@link Feature}.
      */
-    Feature getFeatureById(String featureId, String tenantDomain);
+    Feature getFeatureById(String featureId, String tenantDomain, String userId);
 
     /**
-     * Update a feature given the feature id by replacing the existing feature object.
+     * Update a feature given the feature id and tenant domain by replacing the existing feature object.
      *
-     * @param featureId    unique identifier of the the template.
-     * @param tenantDomain tenant Domain.
-     * @param feature      updated feature object.
+     * @param featureId    Unique identifier of the the template.
+     * @param tenantDomain Tenant Domain.
+     * @param feature      Updated feature object.
      */
     void updateFeatureById(String featureId, String tenantDomain, Feature feature);
 
     /**
-     * Delete a feature given the feature id.
+     * Delete a feature given the feature id, tenant domain and the user id.
      *
-     * @param featureId unique identifier of the feature.
-     * @param tenantDomain tenant Domain.
+     * @param featureId    Unique identifier of the feature.
+     * @param tenantDomain Tenant Domain.
+     * @param userId       Unique identifier of the user.
      */
-    void deleteFeatureById(String featureId, String tenantDomain);
+    void deleteFeatureById(String featureId, String tenantDomain, String userId);
 }

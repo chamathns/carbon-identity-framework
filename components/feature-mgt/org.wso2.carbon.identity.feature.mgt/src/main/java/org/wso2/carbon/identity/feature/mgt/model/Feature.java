@@ -24,16 +24,18 @@ package org.wso2.carbon.identity.feature.mgt.model;
 public class Feature {
 
     private String featureId;
+    private String userId;
     private String featureType;
     private boolean isFeatureLocked;
     private int featureUnlockTime;
     private String[] featureLockReasonCode;
     private String[] featureLockReason;
 
-    public Feature(String featureId, String featureType, boolean isFeatureLocked, int featureUnlockTime,
+    public Feature(String featureId, String userId, String featureType, boolean isFeatureLocked, int featureUnlockTime,
                    String[] featureLockReasonCode, String[] featureLockReason) {
 
         this.featureId = featureId;
+        this.userId = userId;
         this.featureType = featureType;
         this.isFeatureLocked = isFeatureLocked;
         this.featureUnlockTime = featureUnlockTime;
@@ -42,9 +44,19 @@ public class Feature {
     }
 
     /**
+     * Get user ID.
+     *
+     * @return User ID.
+     */
+    public String getUserId() {
+
+        return userId;
+    }
+
+    /**
      * Get feature type.
      *
-     * @return feature type.
+     * @return Feature type.
      */
     public String getFeatureType() {
 
@@ -54,7 +66,7 @@ public class Feature {
     /**
      * Get the status of the feature.
      *
-     * @return the status of the feature.
+     * @return The status of the feature.
      */
     public boolean isFeatureLocked() {
 
@@ -64,7 +76,7 @@ public class Feature {
     /**
      * Get the unlock time for the feature.
      *
-     * @return the unlock time for the feature.
+     * @return The unlock time for the feature.
      */
     public int getFeatureUnlockTime() {
 
@@ -74,7 +86,7 @@ public class Feature {
     /**
      * Get the lock reason code/s for the feature.
      *
-     * @return the lock reason code/s for the feature.
+     * @return The lock reason code/s for the feature.
      */
     public String[] getFeatureLockReasonCode() {
 
@@ -84,11 +96,21 @@ public class Feature {
     /**
      * Get the lock reason/s for the feature.
      *
-     * @return the lock reason/s for the feature.
+     * @return The lock reason/s for the feature.
      */
     public String[] getFeatureLockReason() {
 
         return featureLockReason;
+    }
+
+    /**
+     * Set the user ID of the feature.
+     *
+     * @param userId User ID.
+     */
+    public void setUserId(String userId) {
+
+        this.userId = userId;
     }
 
     /**

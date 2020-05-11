@@ -28,12 +28,13 @@ import org.wso2.carbon.identity.feature.mgt.model.Feature;
 public interface FeatureManager {
 
     /**
-     * Return the feature info given the feature id.
+     * Return the feature info given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
      * @return {@link Feature}.
      */
-    Feature getFeatureById(String featureId);
+    Feature getFeatureById(String featureId, String userId);
 
     /**
      * Update a feature given the feature id by replacing the existing feature object.
@@ -44,33 +45,37 @@ public interface FeatureManager {
     void updateFeatureById(String featureId, Feature feature);
 
     /**
-     * Delete a feature given the feature id.
+     * Delete a feature given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
+     * @param userId    Unique identifier of the user.
      */
-    void deleteFeatureById(String featureId);
+    void deleteFeatureById(String featureId, String userId);
 
     /**
      * Checks the status of the feature. Whether the feature is locked or unlocked.
      *
      * @param featureId Unique identifier of the the feature.
+     * @param userId    Unique identifier of the user.
      * @return The status of the feature.
      */
-    boolean isFeatureLocked(String featureId);
+    boolean isFeatureLocked(String featureId, String userId);
 
     /**
      * Get the reason/s for locking a feature given the feature id.
      *
      * @param featureId Unique identifier of the the feature.
+     * @param userId    Unique identifier of the user.
      * @return The feature lock reason.
      */
-    String[] getFeatureLockReason(String featureId);
+    String[] getFeatureLockReason(String featureId, String userId);
 
     /**
      * Lock a feature given the feature id and the feature lock reason/s.
      *
      * @param featureId             Unique identifier of the feature.
+     * @param userId                Unique identifier of the user.
      * @param featureLockReasonCode The reason/s for locking the feature.
      */
-    void lockFeature(String featureId, String[] featureLockReasonCode);
+    void lockFeature(String featureId, String userId, String[] featureLockReasonCode);
 }
