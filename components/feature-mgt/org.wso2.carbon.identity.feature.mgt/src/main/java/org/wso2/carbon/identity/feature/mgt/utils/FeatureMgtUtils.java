@@ -18,7 +18,10 @@
 
 package org.wso2.carbon.identity.feature.mgt.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.identity.feature.mgt.FeatureMgtConstants;
+import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementServerException;
 
 /**
  * This class is used to define the Utilities required in feature management feature.
@@ -33,5 +36,25 @@ public class FeatureMgtUtils {
     public static String getTenantDomainFromCarbonContext() {
 
         return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+    }
+
+    /**
+     * Used to generate a FeatureManagementServerException from IdentityFeatureMgtConstants
+     * .ErrorMessages.object when no exception is thrown.
+     *
+     * @param error IdentityFeatureMgtConstants.ErrorMessages.
+     * @param data  Data to replace if the message needs to be replaced.
+     * @return FeatureManagementServerException.
+     */
+    public static FeatureManagementServerException handleServerException(FeatureMgtConstants.ErrorMessages error,
+                                                                         String data, Throwable e) {
+
+        String message;
+        if (StringUtils.isNotBlank(data)) {
+            message = String.format(error.getMessage(), data);
+        } else {
+            message = error.getMessage();
+        }
+        return new FeatureManagementServerException(message, error.getCode(), e);
     }
 }

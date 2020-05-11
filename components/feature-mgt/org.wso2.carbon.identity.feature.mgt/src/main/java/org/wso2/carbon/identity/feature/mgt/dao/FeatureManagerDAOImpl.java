@@ -18,7 +18,15 @@
 
 package org.wso2.carbon.identity.feature.mgt.dao;
 
+import org.wso2.carbon.database.utils.jdbc.JdbcTemplate;
+import org.wso2.carbon.database.utils.jdbc.exceptions.DataAccessException;
+import org.wso2.carbon.identity.feature.mgt.FeatureMgtConstants;
+import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementServerException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
+import org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils;
+import org.wso2.carbon.identity.feature.mgt.utils.JdbcUtils;
+
+import java.util.StringJoiner;
 
 /**
  * Feature manager DAO implementation.
@@ -29,13 +37,29 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
     /**
      * Add a {@link Feature}.
      *
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
-     * @param feature      {@link Feature} to insert.
+     * @param tenantId Unique identifier for the tenant domain.
+     * @param userId   Unique identifier of the user.
+     * @param feature  {@link Feature} to insert.
      */
     @Override
-    public void addFeature(String tenantDomain, String userId, Feature feature) {
+    public void addFeature(int tenantId, String userId, Feature feature) throws FeatureManagementServerException {
 
+        JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
+
+        try {
+            jdbcTemplate.executeUpdate(FeatureMgtConstants.SqlQueries.INSERT_FEATURE, preparedStatement -> {
+                preparedStatement.setInt(1, tenantId);
+                preparedStatement.setString(2, userId);
+                preparedStatement.setString(3, feature.getFeatureType());
+                preparedStatement.setBoolean(4, feature.isFeatureLocked());
+                preparedStatement.setInt(5, Math.toIntExact(feature.getFeatureUnlockTime()));
+                preparedStatement.setString(6, prepareStringArray(feature.getFeatureLockReason()));
+                preparedStatement.setString(7, prepareStringArray(feature.getFeatureLockReasonCode()));
+            });
+        } catch (DataAccessException e) {
+            throw FeatureMgtUtils.handleServerException(FeatureMgtConstants.ErrorMessages.ERROR_CODE_INSERT_FEATURE,
+                    feature.getFeatureType(), e);
+        }
     }
 
     /**
@@ -73,5 +97,14 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
     @Override
     public void deleteFeatureById(String featureId, String tenantDomain, String userId) {
 
+    }
+
+    private String prepareStringArray(String[] strings) {
+
+        StringJoiner joiner = new StringJoiner(",");
+        for (String string: strings) {
+            joiner.add(string);
+        }
+        return joiner.toString();
     }
 }

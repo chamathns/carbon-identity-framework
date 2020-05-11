@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.feature.mgt.dao;
 
+import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementServerException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
 /**
@@ -30,11 +31,11 @@ public interface FeatureManagerDAO {
     /**
      * Add a {@link Feature}.
      *
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
-     * @param feature      {@link Feature} to insert.
+     * @param tenantId Unique identifier for the tenant domain.
+     * @param userId   Unique identifier of the user.
+     * @param feature  {@link Feature} to insert.
      */
-    void addFeature(String tenantDomain, String userId, Feature feature);
+    void addFeature(int tenantId, String userId, Feature feature) throws FeatureManagementServerException;
 
     /**
      * Return the feature info given the feature id, tenant domain and the user id.
