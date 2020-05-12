@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.feature.mgt;
 
+import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
 /**
@@ -33,24 +34,27 @@ public interface FeatureManager {
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
      * @return {@link Feature}.
+     * @throws FeatureManagementException
      */
-    Feature getFeatureById(String featureId, String userId);
+    Feature getFeatureById(String featureId, String userId) throws FeatureManagementException;
 
     /**
      * Update a feature given the feature id by replacing the existing feature object.
      *
      * @param featureId Unique identifier of the the feature.
      * @param feature   Updated feature object.
+     * @throws FeatureManagementException
      */
-    void updateFeatureById(String featureId, Feature feature);
+    void updateFeatureById(String featureId, Feature feature) throws FeatureManagementException;
 
     /**
      * Delete a feature given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
+     * @throws FeatureManagementException
      */
-    void deleteFeatureById(String featureId, String userId);
+    void deleteFeatureById(String featureId, String userId) throws FeatureManagementException;
 
     /**
      * Checks the status of the feature. Whether the feature is locked or unlocked.
@@ -58,8 +62,9 @@ public interface FeatureManager {
      * @param featureId Unique identifier of the the feature.
      * @param userId    Unique identifier of the user.
      * @return The status of the feature.
+     * @throws FeatureManagementException
      */
-    boolean isFeatureLocked(String featureId, String userId);
+    boolean isFeatureLocked(String featureId, String userId) throws FeatureManagementException;
 
     /**
      * Get the reason/s for locking a feature given the feature id.
@@ -67,8 +72,9 @@ public interface FeatureManager {
      * @param featureId Unique identifier of the the feature.
      * @param userId    Unique identifier of the user.
      * @return The feature lock reason.
+     * @throws FeatureManagementException
      */
-    String[] getFeatureLockReason(String featureId, String userId);
+    String[] getFeatureLockReason(String featureId, String userId) throws FeatureManagementException;
 
     /**
      * Lock a feature given the feature id and the feature lock reason/s.
@@ -76,14 +82,16 @@ public interface FeatureManager {
      * @param featureId             Unique identifier of the feature.
      * @param userId                Unique identifier of the user.
      * @param featureLockReasonCode The reason/s for locking the feature.
+     * @throws FeatureManagementException
      */
-    void lockFeature(String featureId, String userId, String[] featureLockReasonCode);
+    void lockFeature(String featureId, String userId, String[] featureLockReasonCode) throws FeatureManagementException;
 
     /**
      * Unlock a feature given the feature id and the user id.
      *
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
+     * @throws FeatureManagementException
      */
-    void unlockFeatureById(String featureId, String userId);
+    void unlockFeatureById(String featureId, String userId) throws FeatureManagementException;
 }

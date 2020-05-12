@@ -40,6 +40,14 @@ public class FeatureMgtConstants {
         public static final String INSERT_FEATURE = "INSERT INTO IDN_FEATURE_MAPPING (TENANT_ID, USER_ID, " +
                 "FEATURE_TYPE, IS_FEATURE_LOCKED, FEATURE_UNLOCK_TIME, FEATURE_LOCK_REASON, " +
                 "FEATURE_LOCK_REASON_CODE) VALUES (?,?,?,?,?,?,?)";
+        public static final String GET_FEATURE_BY_ID = "SELECT USER_ID, FEATURE_TYPE, IS_FEATURE_LOCKED, " +
+                "FEATURE_UNLOCK_TIME, FEATURE_LOCK_REASON, FEATURE_LOCK_REASON_CODE" +
+                "FROM IDN_FEATURE_MAPPING WHERE TENANT_ID=? AND USER_ID=? AND FEATURE_TYPE=?";
+        public static final String UPDATE_FEATURE_BY_ID = "UPDATE IDN_FEATURE_MAPPING SET TENANT_ID=?, USER_ID=?, " +
+                "FEATURE_TYPE=?, IS_FEATURE_LOCKED=?, FEATURE_UNLOCK_TIME=?, FEATURE_LOCK_REASON=?, " +
+                "FEATURE_LOCK_REASON_CODE=?  WHERE TENANT_ID=? AND USER_ID=? AND FEATURE_TYPE=?";
+        public static final String DELETE_FEATURE_BY_ID = "DELETE FROM IDN_FEATURE_MAPPING WHERE TENANT_ID=? " +
+                "AND USER_ID=? AND FEATURE_TYPE=?";
     }
 
     /**
@@ -47,7 +55,13 @@ public class FeatureMgtConstants {
      */
     public enum ErrorMessages {
 
-        ERROR_CODE_INSERT_FEATURE("FM_001", "Error occurred while adding the feature: %s.");
+        ERROR_CODE_INSERT_FEATURE("FM_001", "Error occurred while adding the feature: %s."),
+        ERROR_CODE_SELECT_FEATURE_BY_ID("FM_002", "Error occurred while retrieving feature" +
+                " from DB for tenant ID: %d, user ID: %s and feature type: %s."),
+        ERROR_CODE_UPDATE_FEATURE("FM_003", "Error occurred while updating the feature: %s for " +
+                "user ID: %s and tenant ID: %d."),
+        ERROR_CODE_DELETE_FEATURE("FM_004", "Error occurred while deleting feature " +
+                "from DB for tenant ID: %d, user ID: %s and feature type: %s.");
 
         private final String code;
         private final String message;

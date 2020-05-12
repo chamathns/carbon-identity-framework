@@ -20,6 +20,7 @@ package org.wso2.carbon.identity.feature.mgt;
 
 import org.wso2.carbon.identity.feature.mgt.dao.FeatureManagerDAO;
 import org.wso2.carbon.identity.feature.mgt.dao.FeatureManagerDAOImpl;
+import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
 import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTenantDomainFromCarbonContext;
@@ -35,9 +36,10 @@ public class FeatureManagerImpl implements FeatureManager {
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
      * @return {@link Feature}.
+     * @throws FeatureManagementException
      */
     @Override
-    public Feature getFeatureById(String featureId, String userId) {
+    public Feature getFeatureById(String featureId, String userId) throws FeatureManagementException {
 
         return fetchFeatureById(featureId, userId);
     }
@@ -47,9 +49,10 @@ public class FeatureManagerImpl implements FeatureManager {
      *
      * @param featureId Unique identifier of the the template.
      * @param feature   Updated feature object.
+     * @throws FeatureManagementException
      */
     @Override
-    public void updateFeatureById(String featureId, Feature feature) {
+    public void updateFeatureById(String featureId, Feature feature) throws FeatureManagementException {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
         featureManagerDAO.updateFeatureById(featureId, getTenantDomainFromCarbonContext(), feature);
@@ -60,9 +63,10 @@ public class FeatureManagerImpl implements FeatureManager {
      *
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
+     * @throws FeatureManagementException
      */
     @Override
-    public void deleteFeatureById(String featureId, String userId) {
+    public void deleteFeatureById(String featureId, String userId) throws FeatureManagementException {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
         featureManagerDAO.deleteFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
@@ -74,9 +78,10 @@ public class FeatureManagerImpl implements FeatureManager {
      * @param featureId Unique identifier of the the feature.
      * @param userId    Unique identifier of the user.
      * @return The status of the feature.
+     * @throws FeatureManagementException
      */
     @Override
-    public boolean isFeatureLocked(String featureId, String userId) {
+    public boolean isFeatureLocked(String featureId, String userId) throws FeatureManagementException {
 
         Feature feature = fetchFeatureById(featureId, userId);
         long unlockTime = feature.getFeatureUnlockTime();
@@ -92,9 +97,10 @@ public class FeatureManagerImpl implements FeatureManager {
      * @param featureId Unique identifier of the the feature.
      * @param userId    Unique identifier of the user.
      * @return The feature lock reason.
+     * @throws FeatureManagementException
      */
     @Override
-    public String[] getFeatureLockReason(String featureId, String userId) {
+    public String[] getFeatureLockReason(String featureId, String userId) throws FeatureManagementException {
 
         Feature feature = fetchFeatureById(featureId, userId);
         return feature.getFeatureLockReason();
@@ -106,9 +112,11 @@ public class FeatureManagerImpl implements FeatureManager {
      * @param featureId             Unique identifier of the feature.
      * @param userId                Unique identifier of the user.
      * @param featureLockReasonCode The reason/s for locking the feature.
+     * @throws FeatureManagementException
      */
     @Override
-    public void lockFeature(String featureId, String userId, String[] featureLockReasonCode) {
+    public void lockFeature(String featureId, String userId, String[] featureLockReasonCode)
+            throws FeatureManagementException {
 
         long unlockTimePropertyValue = FeatureMgtConstants.UNLOCK_TIME_DEFAULT_VALUE;
         long unlockTime = System.currentTimeMillis() + unlockTimePropertyValue;
@@ -125,21 +133,22 @@ public class FeatureManagerImpl implements FeatureManager {
      *
      * @param featureId Unique identifier of the feature.
      * @param userId    Unique identifier of the user.
+     * @throws FeatureManagementException
      */
     @Override
-    public void unlockFeatureById(String featureId, String userId) {
+    public void unlockFeatureById(String featureId, String userId) throws FeatureManagementException {
 
         Feature feature = fetchFeatureById(featureId, userId);
         unlockFeature(feature);
     }
 
-    private Feature fetchFeatureById(String featureId, String userId) {
+    private Feature fetchFeatureById(String featureId, String userId) throws FeatureManagementException {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
         return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
     }
 
-    private void unlockFeature(Feature feature) {
+    private void unlockFeature(Feature feature) throws FeatureManagementException {
 
         feature.setFeatureLocked(Boolean.FALSE);
         feature.setFeatureUnlockTime(0);
