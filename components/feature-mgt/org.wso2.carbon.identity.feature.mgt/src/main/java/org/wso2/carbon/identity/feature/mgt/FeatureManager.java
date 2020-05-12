@@ -29,69 +29,72 @@ import org.wso2.carbon.identity.feature.mgt.model.Feature;
 public interface FeatureManager {
 
     /**
-     * Return the feature info given the feature id and the user id.
+     * Add a feature against a user given the feature type, user id and the feature info.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
+     * @throws FeatureManagementException
+     */
+    void addFeatureForUser(String featureType, String userId) throws FeatureManagementException;
+
+    /**
+     * Return the feature info given the feature type and the user id.
+     *
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @return {@link Feature}.
      * @throws FeatureManagementException
      */
-    Feature getFeatureById(String featureId, String userId) throws FeatureManagementException;
+    Feature getFeatureForUser(String featureType, String userId) throws FeatureManagementException;
 
     /**
-     * Update a feature given the feature id by replacing the existing feature object.
+     * Delete a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the the feature.
-     * @param feature   Updated feature object.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementException
      */
-    void updateFeatureById(String featureId, Feature feature) throws FeatureManagementException;
+    void deleteFeatureForUser(String featureType, String userId) throws FeatureManagementException;
 
     /**
-     * Delete a feature given the feature id and the user id.
+     * Checks the status of the feature. Whether the feature is locked or unlocked given the feature type and the
+     * user id.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
-     * @throws FeatureManagementException
-     */
-    void deleteFeatureById(String featureId, String userId) throws FeatureManagementException;
-
-    /**
-     * Checks the status of the feature. Whether the feature is locked or unlocked.
-     *
-     * @param featureId Unique identifier of the the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the the feature.
+     * @param userId      Unique identifier of the user.
      * @return The status of the feature.
      * @throws FeatureManagementException
      */
-    boolean isFeatureLocked(String featureId, String userId) throws FeatureManagementException;
+    boolean isFeatureLockedForUser(String featureType, String userId) throws FeatureManagementException;
 
     /**
-     * Get the reason/s for locking a feature given the feature id.
+     * Get the reason/s for locking a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @return The feature lock reason.
      * @throws FeatureManagementException
      */
-    String[] getFeatureLockReason(String featureId, String userId) throws FeatureManagementException;
+    String[] getFeatureLockReasonForUser(String featureType, String userId) throws FeatureManagementException;
 
     /**
-     * Lock a feature given the feature id and the feature lock reason/s.
+     * Lock a feature given the feature type, user id, feature lock time and the feature lock reason/s.
      *
-     * @param featureId             Unique identifier of the feature.
+     * @param featureType           Type of the feature.
      * @param userId                Unique identifier of the user.
+     * @param featureUnlockTime     The unlock time for the feature.
      * @param featureLockReasonCode The reason/s for locking the feature.
      * @throws FeatureManagementException
      */
-    void lockFeature(String featureId, String userId, String[] featureLockReasonCode) throws FeatureManagementException;
+    void lockFeatureForUser(String featureType, String userId, long featureUnlockTime, String[] featureLockReasonCode)
+            throws FeatureManagementException;
 
     /**
-     * Unlock a feature given the feature id and the user id.
+     * Unlock a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementException
      */
-    void unlockFeatureById(String featureId, String userId) throws FeatureManagementException;
+    void unlockFeatureForUser(String featureType, String userId) throws FeatureManagementException;
 }

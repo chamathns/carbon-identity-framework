@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.feature.mgt.dao;
 
-import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementException;
 import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementServerException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
@@ -42,34 +41,35 @@ public interface FeatureManagerDAO {
     /**
      * Return the feature info given the feature id, tenant domain and the user id.
      *
-     * @param featureId    Unique identifier of the feature.
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
      * @return {@link Feature}.
      * @throws FeatureManagementServerException If error occurs while fetching the {@link Feature}.
      */
-    Feature getFeatureById(String featureId, String tenantDomain, String userId)
+    Feature getFeatureById(String featureType, int tenantId, String userId)
             throws FeatureManagementServerException;
 
     /**
      * Update a feature given the feature id and tenant domain by replacing the existing feature object.
      *
-     * @param featureId    Unique identifier of the the template.
-     * @param tenantDomain Tenant Domain.
-     * @param feature      Updated feature object.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
+     * @param feature     Updated feature object.
      * @throws FeatureManagementServerException If error occurs while updating the {@link Feature}.
      */
-    void updateFeatureById(String featureId, String tenantDomain, Feature feature)
+    void updateFeatureById(String featureType, int tenantId, String userId, Feature feature)
             throws FeatureManagementServerException;
 
     /**
      * Delete a feature given the feature id, tenant domain and the user id.
      *
-     * @param featureId    Unique identifier of the feature.
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementServerException If error occurs while deleting the {@link Feature}.
      */
-    void deleteFeatureById(String featureId, String tenantDomain, String userId)
+    void deleteFeatureById(String featureType, int tenantId, String userId)
             throws FeatureManagementServerException;
 }

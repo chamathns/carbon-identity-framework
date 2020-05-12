@@ -21,12 +21,13 @@ package org.wso2.carbon.identity.feature.mgt.dao;
 import org.wso2.carbon.database.utils.jdbc.JdbcTemplate;
 import org.wso2.carbon.database.utils.jdbc.exceptions.DataAccessException;
 import org.wso2.carbon.identity.feature.mgt.FeatureMgtConstants;
-import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementException;
 import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementServerException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 import org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils;
 import org.wso2.carbon.identity.feature.mgt.utils.JdbcUtils;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.StringJoiner;
 
 import static org.wso2.carbon.identity.feature.mgt.FeatureMgtConstants.ErrorMessages.ERROR_CODE_DELETE_FEATURE;
@@ -55,13 +56,7 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
 
         try {
             jdbcTemplate.executeUpdate(FeatureMgtConstants.SqlQueries.INSERT_FEATURE, preparedStatement -> {
-                preparedStatement.setInt(1, tenantId);
-                preparedStatement.setString(2, userId);
-                preparedStatement.setString(3, feature.getFeatureType());
-                preparedStatement.setBoolean(4, feature.isFeatureLocked());
-                preparedStatement.setInt(5, Math.toIntExact(feature.getFeatureUnlockTime()));
-                preparedStatement.setString(6, stringArrayToString(feature.getFeatureLockReason()));
-                preparedStatement.setString(7, stringArrayToString(feature.getFeatureLockReasonCode()));
+                setPreparedStatementForFeature(tenantId, userId, feature, preparedStatement);
             });
         } catch (DataAccessException e) {
             throw FeatureMgtUtils.handleServerException(ERROR_CODE_INSERT_FEATURE, feature.getFeatureType(), e);
@@ -71,14 +66,14 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
     /**
      * Return the feature info given the feature id, tenant domain and the user id.
      *
-     * @param featureId    Unique identifier of the feature.
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
      * @return {@link Feature}.
      * @throws FeatureManagementServerException If error occurs while fetching the {@link Feature}.
      */
     @Override
-    public Feature getFeatureById(String featureId, String tenantDomain, String userId)
+    public Feature getFeatureById(String featureType, int tenantId, String userId)
             throws FeatureManagementServerException {
 
         Feature feature;
@@ -87,7 +82,6 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
             feature = jdbcTemplate.fetchSingleRecord(FeatureMgtConstants.SqlQueries.GET_FEATURE_BY_ID,
                     ((resultSet, i) -> {
                         Feature featureResult = new Feature(
-                                "featureId",
                                 resultSet.getString(1),
                                 resultSet.getString(2),
                                 resultSet.getBoolean(3),
@@ -97,13 +91,13 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
                         return featureResult;
                     }),
                     preparedStatement -> {
-                        preparedStatement.setInt(1, -1234);
+                        preparedStatement.setInt(1, tenantId);
                         preparedStatement.setString(2, userId);
-                        preparedStatement.setString(3, "featureType");
+                        preparedStatement.setString(3, featureType);
                     });
         } catch (DataAccessException e) {
             throw new FeatureManagementServerException(String.format(ERROR_CODE_SELECT_FEATURE_BY_ID.getMessage(),
-                    -1234, userId, "featureType"), ERROR_CODE_SELECT_FEATURE_BY_ID.getCode(), e);
+                    tenantId, userId, featureType), ERROR_CODE_SELECT_FEATURE_BY_ID.getCode(), e);
         }
         return feature;
     }
@@ -111,57 +105,52 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
     /**
      * Update a feature given the feature id and tenant domain by replacing the existing feature object.
      *
-     * @param featureId    Unique identifier of the the template.
-     * @param tenantDomain Tenant Domain.
-     * @param feature      Updated feature object.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
+     * @param feature     Updated feature object.
      * @throws FeatureManagementServerException If error occurs while updating the {@link Feature}.
      */
     @Override
-    public void updateFeatureById(String featureId, String tenantDomain, Feature feature)
+    public void updateFeatureById(String featureType, int tenantId, String userId, Feature feature)
             throws FeatureManagementServerException {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
         try {
             jdbcTemplate.executeUpdate(FeatureMgtConstants.SqlQueries.UPDATE_FEATURE_BY_ID, (preparedStatement -> {
-                preparedStatement.setInt(1, -1234);
-                preparedStatement.setString(2, "newUserId");
-                preparedStatement.setString(3, feature.getFeatureType());
-                preparedStatement.setBoolean(4, feature.isFeatureLocked());
-                preparedStatement.setInt(5, Math.toIntExact(feature.getFeatureUnlockTime()));
-                preparedStatement.setString(6, stringArrayToString(feature.getFeatureLockReason()));
-                preparedStatement.setString(7, stringArrayToString(feature.getFeatureLockReasonCode()));
-                preparedStatement.setInt(8, -1234);
-                preparedStatement.setString(9, "userId");
-                preparedStatement.setString(10, "oldFeatureType");
+                setPreparedStatementForFeature(tenantId, userId, feature, preparedStatement);
+                preparedStatement.setInt(8, tenantId);
+                preparedStatement.setString(9, userId);
+                preparedStatement.setString(10, featureType);
             }));
         } catch (DataAccessException e) {
             throw new FeatureManagementServerException(String.format(ERROR_CODE_UPDATE_FEATURE.getMessage(),
-                    "featureType", "userId", -1234), ERROR_CODE_SELECT_FEATURE_BY_ID.getCode(), e);
+                    featureType, userId, tenantId), ERROR_CODE_SELECT_FEATURE_BY_ID.getCode(), e);
         }
     }
 
     /**
      * Delete a feature given the feature id, tenant domain and the user id.
      *
-     * @param featureId    Unique identifier of the feature.
-     * @param tenantDomain Tenant Domain.
-     * @param userId       Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param tenantId    Unique identifier for the tenant domain.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementServerException If error occurs while deleting the {@link Feature}.
      */
     @Override
-    public void deleteFeatureById(String featureId, String tenantDomain, String userId)
+    public void deleteFeatureById(String featureType, int tenantId, String userId)
             throws FeatureManagementServerException {
 
         JdbcTemplate jdbcTemplate = JdbcUtils.getNewTemplate();
         try {
             jdbcTemplate.executeUpdate(FeatureMgtConstants.SqlQueries.DELETE_FEATURE_BY_ID, preparedStatement -> {
-                preparedStatement.setInt(1, -1234);
+                preparedStatement.setInt(1, tenantId);
                 preparedStatement.setString(2, userId);
-                preparedStatement.setString(3, "featureType");
+                preparedStatement.setString(3, featureType);
             });
         } catch (DataAccessException e) {
-            throw new FeatureManagementServerException(String.format(ERROR_CODE_DELETE_FEATURE.getMessage(), -1234,
-                    userId, "featureType"), ERROR_CODE_DELETE_FEATURE.getCode(), e);
+            throw new FeatureManagementServerException(String.format(ERROR_CODE_DELETE_FEATURE.getMessage(), tenantId,
+                    userId, featureType), ERROR_CODE_DELETE_FEATURE.getCode(), e);
         }
     }
 
@@ -178,5 +167,16 @@ public class FeatureManagerDAOImpl implements FeatureManagerDAO {
 
         String[] strings = string.split(",");
         return strings;
+    }
+
+    private void setPreparedStatementForFeature(int tenantId, String userId, Feature feature,
+                                                PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setInt(1, tenantId);
+        preparedStatement.setString(2, userId);
+        preparedStatement.setString(3, feature.getFeatureType());
+        preparedStatement.setBoolean(4, feature.isFeatureLocked());
+        preparedStatement.setInt(5, Math.toIntExact(feature.getFeatureUnlockTime()));
+        preparedStatement.setString(6, stringArrayToString(feature.getFeatureLockReason()));
+        preparedStatement.setString(7, stringArrayToString(feature.getFeatureLockReasonCode()));
     }
 }

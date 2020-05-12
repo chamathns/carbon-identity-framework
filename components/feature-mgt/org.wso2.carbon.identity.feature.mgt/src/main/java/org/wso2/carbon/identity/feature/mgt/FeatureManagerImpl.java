@@ -23,7 +23,7 @@ import org.wso2.carbon.identity.feature.mgt.dao.FeatureManagerDAOImpl;
 import org.wso2.carbon.identity.feature.mgt.exception.FeatureManagementException;
 import org.wso2.carbon.identity.feature.mgt.model.Feature;
 
-import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTenantDomainFromCarbonContext;
+import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTenantIDFromCarbonContext;
 
 /**
  * Feature manager service implementation.
@@ -31,129 +31,133 @@ import static org.wso2.carbon.identity.feature.mgt.utils.FeatureMgtUtils.getTena
 public class FeatureManagerImpl implements FeatureManager {
 
     /**
-     * Return the feature info given the feature id and the user id.
+     * Add a feature against a user given the feature type, user id and the feature info.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
+     * @throws FeatureManagementException
+     */
+    @Override
+    public void addFeatureForUser(String featureType, String userId)
+            throws FeatureManagementException {
+
+        Feature feature = new Feature(featureType, userId, Boolean.FALSE, 0, null, null);
+        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
+        featureManagerDAO.addFeature(getTenantIDFromCarbonContext(), userId, feature);
+    }
+
+    /**
+     * Return the feature info given the feature type and the user id.
+     *
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @return {@link Feature}.
      * @throws FeatureManagementException
      */
     @Override
-    public Feature getFeatureById(String featureId, String userId) throws FeatureManagementException {
+    public Feature getFeatureForUser(String featureType, String userId) throws FeatureManagementException {
 
-        return fetchFeatureById(featureId, userId);
+        return fetchFeatureById(featureType, userId);
     }
 
     /**
-     * Update a feature given the feature id by replacing the existing feature object.
+     * Delete a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the the template.
-     * @param feature   Updated feature object.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementException
      */
     @Override
-    public void updateFeatureById(String featureId, Feature feature) throws FeatureManagementException {
+    public void deleteFeatureForUser(String featureType, String userId) throws FeatureManagementException {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        featureManagerDAO.updateFeatureById(featureId, getTenantDomainFromCarbonContext(), feature);
+        featureManagerDAO.deleteFeatureById(featureType, getTenantIDFromCarbonContext(), userId);
     }
 
     /**
-     * Delete a feature given the feature id and the user id.
+     * Checks the status of the feature. Whether the feature is locked or unlocked given the feature type and the
+     * user id.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
-     * @throws FeatureManagementException
-     */
-    @Override
-    public void deleteFeatureById(String featureId, String userId) throws FeatureManagementException {
-
-        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        featureManagerDAO.deleteFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
-    }
-
-    /**
-     * Checks the status of the feature. Whether the feature is locked or unlocked.
-     *
-     * @param featureId Unique identifier of the the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the the feature.
+     * @param userId      Unique identifier of the user.
      * @return The status of the feature.
      * @throws FeatureManagementException
      */
     @Override
-    public boolean isFeatureLocked(String featureId, String userId) throws FeatureManagementException {
+    public boolean isFeatureLockedForUser(String featureType, String userId) throws FeatureManagementException {
 
-        Feature feature = fetchFeatureById(featureId, userId);
+        Feature feature = fetchFeatureById(featureType, userId);
         long unlockTime = feature.getFeatureUnlockTime();
         if (System.currentTimeMillis() > unlockTime) {
-            unlockFeature(feature);
+            unlockFeature(feature, userId);
         }
         return feature.isFeatureLocked();
     }
 
     /**
-     * Get the reason/s for locking a feature given the feature id.
+     * Get the reason/s for locking a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @return The feature lock reason.
      * @throws FeatureManagementException
      */
     @Override
-    public String[] getFeatureLockReason(String featureId, String userId) throws FeatureManagementException {
+    public String[] getFeatureLockReasonForUser(String featureType, String userId) throws FeatureManagementException {
 
-        Feature feature = fetchFeatureById(featureId, userId);
+        Feature feature = fetchFeatureById(featureType, userId);
         return feature.getFeatureLockReason();
     }
 
     /**
-     * Lock a feature given the feature id and the feature lock reason/s.
+     * Lock a feature given the feature type, user id, feature lock time and the feature lock reason/s.
      *
-     * @param featureId             Unique identifier of the feature.
+     * @param featureType           Type of the feature.
      * @param userId                Unique identifier of the user.
+     * @param featureUnlockTime     The unlock time for the feature.
      * @param featureLockReasonCode The reason/s for locking the feature.
      * @throws FeatureManagementException
      */
     @Override
-    public void lockFeature(String featureId, String userId, String[] featureLockReasonCode)
+    public void lockFeatureForUser(String featureType, String userId, long featureUnlockTime, String[] featureLockReasonCode)
             throws FeatureManagementException {
 
-        long unlockTimePropertyValue = FeatureMgtConstants.UNLOCK_TIME_DEFAULT_VALUE;
-        long unlockTime = System.currentTimeMillis() + unlockTimePropertyValue;
-        Feature feature = fetchFeatureById(featureId, userId);
+        long unlockTime = System.currentTimeMillis() + featureUnlockTime;
+        Feature feature = fetchFeatureById(featureType, userId);
         feature.setFeatureLocked(Boolean.TRUE);
         feature.setFeatureLockReasonCode(featureLockReasonCode);
         feature.setFeatureUnlockTime(unlockTime);
-        FeatureManager featureManager = new FeatureManagerImpl();
-        featureManager.updateFeatureById(featureId, feature);
+        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
+        featureManagerDAO.updateFeatureById(featureType, getTenantIDFromCarbonContext(), userId, feature);
     }
 
     /**
-     * Unlock a feature given the feature id and the user id.
+     * Unlock a feature given the feature type and the user id.
      *
-     * @param featureId Unique identifier of the feature.
-     * @param userId    Unique identifier of the user.
+     * @param featureType Type of the feature.
+     * @param userId      Unique identifier of the user.
      * @throws FeatureManagementException
      */
     @Override
-    public void unlockFeatureById(String featureId, String userId) throws FeatureManagementException {
+    public void unlockFeatureForUser(String featureType, String userId) throws FeatureManagementException {
 
-        Feature feature = fetchFeatureById(featureId, userId);
-        unlockFeature(feature);
+        Feature feature = fetchFeatureById(featureType, userId);
+        unlockFeature(feature, userId);
     }
 
     private Feature fetchFeatureById(String featureId, String userId) throws FeatureManagementException {
 
         FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
-        return featureManagerDAO.getFeatureById(featureId, getTenantDomainFromCarbonContext(), userId);
+        return featureManagerDAO.getFeatureById(featureId, getTenantIDFromCarbonContext(), userId);
     }
 
-    private void unlockFeature(Feature feature) throws FeatureManagementException {
+    private void unlockFeature(Feature feature, String userId) throws FeatureManagementException {
 
         feature.setFeatureLocked(Boolean.FALSE);
         feature.setFeatureUnlockTime(0);
         feature.setFeatureLockReason(null);
         feature.setFeatureLockReasonCode(null);
-        updateFeatureById(feature.getFeatureId(), feature);
+        FeatureManagerDAO featureManagerDAO = new FeatureManagerDAOImpl();
+        featureManagerDAO.updateFeatureById(feature.getFeatureType(), getTenantIDFromCarbonContext(), userId, feature);
     }
 }

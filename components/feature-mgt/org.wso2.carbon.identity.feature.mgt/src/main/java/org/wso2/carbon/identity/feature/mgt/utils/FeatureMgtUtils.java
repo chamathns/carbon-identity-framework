@@ -33,9 +33,9 @@ public class FeatureMgtUtils {
      *
      * @return Tenant Id.
      */
-    public static String getTenantDomainFromCarbonContext() {
+    public static int getTenantIDFromCarbonContext() {
 
-        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
     }
 
     /**

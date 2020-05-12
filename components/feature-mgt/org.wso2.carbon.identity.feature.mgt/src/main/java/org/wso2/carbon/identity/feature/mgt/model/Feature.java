@@ -23,7 +23,6 @@ package org.wso2.carbon.identity.feature.mgt.model;
  */
 public class Feature {
 
-    private String featureId;
     private String userId;
     private String featureType;
     private boolean isFeatureLocked;
@@ -31,26 +30,15 @@ public class Feature {
     private String[] featureLockReasonCode;
     private String[] featureLockReason;
 
-    public Feature(String featureId, String userId, String featureType, boolean isFeatureLocked, long featureUnlockTime,
+    public Feature(String featureType, String userId, boolean isFeatureLocked, long featureUnlockTime,
                    String[] featureLockReasonCode, String[] featureLockReason) {
 
-        this.featureId = featureId;
-        this.userId = userId;
         this.featureType = featureType;
+        this.userId = userId;
         this.isFeatureLocked = isFeatureLocked;
         this.featureUnlockTime = featureUnlockTime;
         this.featureLockReasonCode = featureLockReasonCode;
         this.featureLockReason = featureLockReason;
-    }
-
-    /**
-     * Get feature ID.
-     *
-     * @return Feature ID.
-     */
-    public String getFeatureId() {
-
-        return featureId;
     }
 
     /**
