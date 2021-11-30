@@ -20,7 +20,7 @@
     <groupId>org.wso2.carbon.identity.framework</groupId>
     <artifactId>identity-framework</artifactId>
     <packaging>pom</packaging>
-    <version>5.20.244</version>
+    <version>5.20.266-SNAPSHOT</version>
     <name>WSO2 Carbon - Platform Aggregator Pom</name>
     <url>http://wso2.org</url>
 
@@ -34,7 +34,7 @@
         <url>https://github.com/wso2/carbon-identity-framework.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-identity-framework.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-identity-framework.git</connection>
-        <tag>v5.20.244</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
@@ -716,16 +716,6 @@
                 <artifactId>org.wso2.carbon.identity.template.mgt.ui.feature</artifactId>
                 <version>${project.version}</version>
                 <type>zip</type>
-            </dependency>
-            <dependency>
-                <groupId>org.openid4java</groupId>
-                <artifactId>openid4java</artifactId>
-                <version>${openid4java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.openid4java</groupId>
-                <artifactId>openid4java</artifactId>
-                <version>${openid4java.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.step2.wso2</groupId>
@@ -1913,9 +1903,6 @@
         <google.step2.wso2.version>1.0.wso2v2</google.step2.wso2.version>
         <google.guice.wso2.version>3.0.wso2v1</google.guice.wso2.version>
         <google.guice.imp.pkg.version.range>[1.3.0,2.0.0)</google.guice.imp.pkg.version.range>
-        <openid4java.version>1.0.0</openid4java.version>
-        <openid4java.wso2.version>1.0.0.wso2v4</openid4java.wso2.version>
-        <openid4java.wso2.osgi.version.range>[1.0.0,2.0.0)</openid4java.wso2.osgi.version.range>
         <gdata-core.wso2.version>1.47.0.wso2v1</gdata-core.wso2.version>
         <gdata-core.imp.pkg.version.range>[1.47.0.wso2v1,2.0.0)</gdata-core.imp.pkg.version.range>
         <httpcomponents-httpclient.wso2.version>4.3.6.wso2v2</httpcomponents-httpclient.wso2.version>
