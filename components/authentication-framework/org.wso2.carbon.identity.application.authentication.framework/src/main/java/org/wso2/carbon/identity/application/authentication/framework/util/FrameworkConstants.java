@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.application.authentication.framework.util;
 
 /**
- * Constants used in Application Authenticators Framework
+ * Constants used in Application Authenticators Framework.
  */
 public abstract class FrameworkConstants {
 
@@ -220,7 +220,7 @@ public abstract class FrameworkConstants {
                 + ".ReturnManuallyAddedLocalRoles";
 
         /**
-         * Configuration name for setting the url for receiving tenant list upon any modification to a tenant
+         * Configuration name for setting the url for receiving tenant list upon any modification to a tenant.
          */
         public static final String ELEM_TENANT_DATA_LISTENER_URL = "TenantDataListenerURL";
         // Constant definitions for attributes
@@ -261,11 +261,11 @@ public abstract class FrameworkConstants {
                 "AllowCustomClaimMappingsForAuthenticators";
 
         /**
-         * Configuration name for the collection of urls for receiving tenant list
+         * Configuration name for the collection of urls for receiving tenant list.
          */
         public static final String QNAME_TENANT_DATA_LISTENER_URLS = "TenantDataListenerURLs";
         /**
-         * Configuration name for enabling or disabling the tenant list dropdown
+         * Configuration name for enabling or disabling the tenant list dropdown.
          */
         public static final String QNAME_TENANT_DOMAIN_DROPDOWN_ENABLED = "TenantDomainDropDownEnabled";
         public static final String QNAME_EXT_REQ_COORDINATOR = "RequestCoordinator";
@@ -622,5 +622,15 @@ public abstract class FrameworkConstants {
         public static final String COOKIE_NAME = "ALOR";
         public static final String CONTENT = "content";
         public static final String DOMAIN = "domain";
+    }
+
+    /**
+     * Constants related with logging.
+     */
+    public static class LogConstants {
+
+        public static final String AUTHENTICATION_FRAMEWORK = "authentication-framework";
+        public static final String FAILED = "FAILED";
+        public static final String SUCCESS = "SUCCESS";
     }
 }
