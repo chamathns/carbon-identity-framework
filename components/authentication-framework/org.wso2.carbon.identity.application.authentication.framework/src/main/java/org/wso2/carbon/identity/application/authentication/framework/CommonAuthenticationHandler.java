@@ -64,8 +64,8 @@ public class CommonAuthenticationHandler {
                 });
             }
             LoggerUtils.triggerDiagnosticLogEvent(FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, params,
-                    FrameworkConstants.LogConstants.SUCCESS, "Authentication request received", "recieve" +
-                            "-authentication-request", null);
+                    FrameworkConstants.LogConstants.SUCCESS, "Successfully received authentication request", "receive" +
+                            "-authn-request", null);
         }
         FrameworkUtils.getRequestCoordinator().handle(request, response);
     }

@@ -54,6 +54,7 @@ import org.wso2.carbon.identity.application.authentication.framework.util.LoginC
 import org.wso2.carbon.identity.application.common.model.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.application.common.model.ServiceProvider;
+import org.wso2.carbon.identity.central.log.mgt.utils.LoggerUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.user.api.Tenant;
@@ -165,6 +166,13 @@ public class DefaultRequestCoordinator extends AbstractRequestCoordinator implem
                             log.debug("No authentication request found in the cache for sessionDataKey: "
                                     + sessionDataKey);
                         }
+                        if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                            LoggerUtils.triggerDiagnosticLogEvent(
+                                    FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, null,
+                                    FrameworkConstants.LogConstants.SUCCESS, "No authentication request found in the " +
+                                            "cache for sessionDataKey: " + sessionDataKey, "handle-authentication" +
+                                            "-request", null);
+                        }
 
                         if (isCommonAuthLogoutRequest(request)) {
                             if (log.isDebugEnabled()) {
@@ -182,6 +190,13 @@ public class DefaultRequestCoordinator extends AbstractRequestCoordinator implem
                     // sessionDataKey is null and not a common auth logout request
                     if (log.isDebugEnabled()) {
                         log.debug("Session data key is null in the request and not a logout request.");
+                    }
+                    if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                        LoggerUtils.triggerDiagnosticLogEvent(
+                                FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, null,
+                                FrameworkConstants.LogConstants.FAILED, "Not a logout request and session data key " +
+                                        "is null in the request. Sending to retry page.", "handle-authentication" +
+                                        "-request", null);
                     }
 
                     FrameworkUtils.sendToRetryPage(request, response, context);
