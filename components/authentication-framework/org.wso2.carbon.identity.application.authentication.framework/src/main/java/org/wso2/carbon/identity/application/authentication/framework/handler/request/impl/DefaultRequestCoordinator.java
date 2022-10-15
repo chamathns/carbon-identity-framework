@@ -240,6 +240,13 @@ public class DefaultRequestCoordinator extends AbstractRequestCoordinator implem
                                     "Request Headers: " + getHeaderString(request) + "\n" +
                                     "Thread Id: " + Thread.currentThread().getId());
                         }
+                        if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                            LoggerUtils.triggerDiagnosticLogEvent(
+                                    FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, null,
+                                    FrameworkConstants.LogConstants.FAILED, "Same context is currently in used by a " +
+                                            "different thread. Possible double submit.", "handle-authentication" +
+                                            "-request", null);
+                        }
                         FrameworkUtils.sendToRetryPage(request, responseWrapper, context);
                         return;
                     }
@@ -601,6 +608,20 @@ public class DefaultRequestCoordinator extends AbstractRequestCoordinator implem
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Starting an authentication flow");
+            }
+            if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                Map<String, Object> params = new HashMap<>();
+                params.put(FrameworkConstants.SESSION_DATA_KEY, callerSessionDataKey);
+                params.put(FrameworkConstants.RequestParams.TYPE, requestType);
+                params.put(FrameworkConstants.RequestParams.ISSUER, relyingParty);
+                params.put(FrameworkConstants.RequestParams.LOGIN_TENANT_DOMAIN, loginDomain);
+                params.put(FrameworkConstants.RequestParams.USER_TENANT_DOMAIN_HINT, userDomain);
+                params.put(FrameworkConstants.RequestParams.TENANT_DOMAIN, tenantDomain);
+                params.put(FrameworkConstants.RequestParams.CALLER_PATH, callerPath);
+                LoggerUtils.triggerDiagnosticLogEvent(
+                        FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, params,
+                        FrameworkConstants.LogConstants.SUCCESS, "Initializing authentication flow", "init" +
+                                "-authentication-flow", null);
             }
         }
 

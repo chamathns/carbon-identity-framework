@@ -54,6 +54,7 @@ import org.wso2.carbon.identity.application.authentication.framework.store.UserS
 import org.wso2.carbon.identity.application.authentication.framework.util.FrameworkConstants;
 import org.wso2.carbon.identity.application.authentication.framework.util.FrameworkUtils;
 import org.wso2.carbon.identity.application.common.model.User;
+import org.wso2.carbon.identity.central.log.mgt.utils.LoggerUtils;
 import org.wso2.carbon.identity.core.model.IdentityErrorMsgContext;
 import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
@@ -543,6 +544,17 @@ public class DefaultStepHandler implements StepHandler {
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(authenticator.getName() + " can handle the request.");
+                }
+                if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("authenticator", authenticator.getName());
+                    params.put("step", currentStep);
+                    params.put("tenant", context.getTenantDomain());
+                    params.put("relyingParty", context.getRelyingParty());
+                    LoggerUtils.triggerDiagnosticLogEvent(
+                            FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, params,
+                            FrameworkConstants.LogConstants.SUCCESS, "Initializing authentication flow", "handle" +
+                                    "-authentication-step", null);
                 }
 
                 doAuthentication(request, response, context, authenticatorConfig);
