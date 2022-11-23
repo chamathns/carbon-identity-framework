@@ -271,6 +271,26 @@ public class DefaultClaimHandler implements ClaimHandler {
         appConfig.setClaimMappings(claimMappings);
         appConfig.setRequestedClaims(requestedClaims);
         appConfig.setMandatoryClaims(mandatoryClaims);
+<<<<<<< Updated upstream
+=======
+
+        if (LoggerUtils.isDiagnosticLogsEnabled()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("service provider", appConfig.getApplicationName());
+            Optional.ofNullable(requestedClaims.entrySet()).ifPresent(entries -> {
+                List<String> claimsList = entries.stream().map(Entry::getKey).collect(Collectors.toList());
+                params.put("requested claims", claimsList);
+            });
+            Optional.ofNullable(mandatoryClaims.entrySet()).ifPresent(entries -> {
+                List<String> claimsList = entries.stream().map(Entry::getKey).collect(Collectors.toList());
+                params.put("mandatory claims", claimsList);
+            });
+            params.put("claim mappings", claimMappings);
+            LoggerUtils.triggerDiagnosticLogEvent(
+                    FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, params, LogConstants.SUCCESS,
+                    "Handling service provider requested claims", "handle-claim-mappings", null);
+        }
+>>>>>>> Stashed changes
     }
 
     private void setClaimsWhenLocalClaimNotExists(Map<String, String> claimMappings,

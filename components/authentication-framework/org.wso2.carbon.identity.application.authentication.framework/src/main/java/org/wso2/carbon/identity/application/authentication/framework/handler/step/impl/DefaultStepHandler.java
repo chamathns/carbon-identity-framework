@@ -710,6 +710,23 @@ public class DefaultStepHandler implements StepHandler {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("A login attempt was failed due to invalid credentials", e);
             }
+<<<<<<< Updated upstream
+=======
+            if (LoggerUtils.isDiagnosticLogsEnabled()) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("step", stepConfig.getOrder());
+                params.put("service provider", context.getServiceProviderName());
+                params.put("tenant domain", context.getTenantDomain());
+                params.put("authenticator", authenticatorConfig.getName());
+                Optional.ofNullable(e.getUser()).ifPresent(user -> {
+                    params.put("user id", user.getLoggableUserId());
+                    params.put("user store domain", user.getUserStoreDomain());
+                });
+                LoggerUtils.triggerDiagnosticLogEvent(FrameworkConstants.LogConstants.AUTHENTICATION_FRAMEWORK, params,
+                        LogConstants.FAILED, "Authentication failed: " + e.getMessage(),
+                        "handle-authentication-step", null);
+            }
+>>>>>>> Stashed changes
             String data = "Step: " + stepConfig.getOrder() + ", IDP: " + idpName + ", Authenticator:" +
                     authenticatorConfig.getName();
             String initiator = null;
